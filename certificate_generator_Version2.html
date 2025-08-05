@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>เกียรติบัตรรับรองโรงเรียนบวรหัสดินทรวงศ์</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Anuphan&display=swap');
+
+  body {
+    background: #f5f0e8 url('https://i.imgur.com/3BztqvH.jpg') no-repeat center center fixed;
+    background-size: cover;
+    font-family: 'Anuphan', sans-serif;
+    padding: 20px;
+    color: #3a2e1e;
+  }
+  h1, h2 {
+    text-align: center;
+    font-weight: 700;
+    margin-bottom: 5px;
+  }
+  .container {
+    max-width: 700px;
+    margin: auto;
+    background: rgba(255 255 240 / 0.9);
+    padding: 25px 30px;
+    border: 6px double #8b5e3c;
+    box-shadow: 0 0 15px rgba(139, 94, 60, 0.6);
+    border-radius: 15px;
+  }
+  label {
+    display: block;
+    margin-top: 15px;
+    font-weight: 600;
+    font-size: 1.1rem;
+  }
+  input[type="text"], input[type="date"] {
+    width: 100%;
+    padding: 8px 12px;
+    font-size: 1.1rem;
+    border: 2px solid #8b5e3c;
+    border-radius: 8px;
+    margin-top: 5px;
+    font-family: 'Anuphan', sans-serif;
+  }
+  button {
+    margin-top: 20px;
+    background-color: #8b5e3c;
+    color: #fff;
+    border: none;
+    padding: 12px 22px;
+    font-size: 1.2rem;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 700;
+  }
+  button:hover {
+    background-color: #a97449;
+  }
+  .certificate {
+    margin-top: 30px;
+    padding: 20px 30px;
+    border: 8px double #6b4e2e;
+    border-radius: 18px;
+    background: #fff8e1;
+    position: relative;
+  }
+  .cert-header {
+    text-align: center;
+    font-weight: 900;
+    font-size: 1.7rem;
+    margin-bottom: 12px;
+    letter-spacing: 2px;
+    color: #5b4327;
+  }
+  .cert-title {
+    text-align: center;
+    font-weight: 700;
+    font-size: 1.4rem;
+    margin-bottom: 25px;
+    color: #6c543d;
+  }
+  .cert-body {
+    font-size: 1.2rem;
+    line-height: 1.6;
+    white-space: pre-line;
+    padding: 0 25px;
+    color: #4c3a1c;
+  }
+  .cert-sign {
+    margin-top: 50px;
+    display: flex;
+    justify-content: space-between;
+    padding: 0 50px;
+    font-weight: 600;
+    color: #5a4b2e;
+  }
+  .cert-sign div {
+    text-align: center;
+    font-size: 1.1rem;
+  }
+  .seal {
+    position: absolute;
+    top: 20px;
+    right: 25px;
+    width: 120px;
+    opacity: 0.1;
+    user-select: none;
+  }
+</style>
+</head>
+<body>
+  <div class="container">
+    <h1>โรงเรียนบวรหัสดินทรวงศ์</h1>
+    <h2>ประกาศนียบัตรรับรอง</h2>
+
+    <form id="certForm">
+      <label for="studentName">ชื่อ-นามสกุล นักเรียน</label>
+      <input type="text" id="studentName" placeholder="เช่น สมชาย ใจดี" required />
+
+      <label for="signerName">ชื่อผู้รับรอง</label>
+      <input type="text" id="signerName" placeholder="เช่น สมหมาย ปฐมฤกษ์" required />
+
+      <label for="signerPosition">ตำแหน่ง</label>
+      <input type="text" id="signerPosition" placeholder="เช่น ราชประทินแห่งบวรหัสดินทรวงศ์" required />
+
+      <label for="signDate">วันที่</label>
+      <input type="date" id="signDate" required />
+
+      <button type="submit">สร้างเกียรติบัตร</button>
+    </form>
+
+    <div id="certificate" class="certificate" style="display:none;">
+      <img class="seal" src="https://i.imgur.com/NBMQ9qJ.png" alt="ตราโรงเรียน" />
+      <div class="cert-header">โรงเรียนบวรหัสดินทรวงศ์</div>
+      <div class="cert-title">ประกาศนียบัตรรับรอง</div>
+      <div class="cert-body" id="certBody">
+        <!-- เนื้อหาเกียรติบัตรจะแสดงที่นี่ -->
+      </div>
+      <div class="cert-sign">
+        <div>
+          ลงนาม<br />
+          <span id="signerNameDisplay"></span><br />
+          <span id="signerPositionDisplay"></span>
+        </div>
+        <div>
+          วันที่<br />
+          <span id="signDateDisplay"></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<script>
+  document.getElementById('certForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const studentName = document.getElementById('studentName').value.trim();
+    const signerName = document.getElementById('signerName').value.trim();
+    const signerPosition = document.getElementById('signerPosition').value.trim();
+    const signDate = document.getElementById('signDate').value;
+
+    if (!studentName || !signerName || !signerPosition || !signDate) {
+      alert('กรุณากรอกข้อมูลให้ครบทุกช่อง');
+      return;
+    }
+
+    const options = { year: 'numeric', month: 'long', day: 'numeric',  locale: 'th-TH' };
+    const formattedDate = new Date(signDate).toLocaleDateString('th-TH', options);
+
+    const certText = 
+`ขอรับรองว่า  
+${studentName}  
+บุตรแห่งตระกูลผู้ทรงเกียรติ  
+ได้รับคัดเลือกเข้าเรียน ณ สถานศึกษานี้  
+ด้วยเกียรติศักดิ์และวินัยอันสูงส่ง
+
+จงภาคภูมิใจในศักดิ์ศรีแห่งราชนิกุล  
+และยึดมั่นในคุณธรรมตลอดการศึกษา`;
+
+    document.getElementById('certBody').textContent = certText;
+    document.getElementById('signerNameDisplay').textContent = signerName;
+    document.getElementById('signerPositionDisplay').textContent = signerPosition;
+    document.getElementById('signDateDisplay').textContent = formattedDate;
+
+    document.getElementById('certificate').style.display = 'block';
+
+    // เลื่อนหน้าจอไปยังเกียรติบัตร
+    document.getElementById('certificate').scrollIntoView({behavior: "smooth"});
+  });
+</script>
+
+</body>
+</html>
